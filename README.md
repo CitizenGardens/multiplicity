@@ -1,5 +1,4 @@
 # Multiplicity Substrates — Root Repository
->>>>>>> b58a1b5 (Docs updated and extra docs removed.)
 
 This is the root repository for the Multiplicity Sovereign Core framework, containing formal Lean 4 verification, Rust engines, and the Phase Mirror Commander ecosystem. All developments are bound by the **Sedona Spine** policy and the Ξ-Constitution.
 
