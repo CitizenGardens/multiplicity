@@ -1,0 +1,2 @@
+[workspace]
+members = ["rust", "multiplicity/rust", "rust/governance-circuits", "phase_mirror_wasm"]
