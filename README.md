@@ -115,6 +115,6 @@ See `docs/adr/ADR-001-Combined-Mandate.md` for the constitutional basis.
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+The Prime Materia Commons — see [LICENSE](LICENSE)
 
 <!-- LawfulRecursionVersion:1.0 -->
