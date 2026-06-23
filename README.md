@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-Multiplicity Substrates – Formalization & Rust Engine Core
-=======
 # Multiplicity Substrates — Root Repository
 >>>>>>> b58a1b5 (Docs updated and extra docs removed.)
 
