@@ -1,4 +1,4 @@
-# Substrates – Stand‑alone Formalization & Rust Engine Core
+Multiplicity Substrates – Formalization & Rust Engine Core
 
 This directory contains the core formally verified dynamics for the Multiplicity Sovereign Core framework. It adheres to the strict **Sedona Spine** policy:
 - No `sorry` placeholders in core proofs.
