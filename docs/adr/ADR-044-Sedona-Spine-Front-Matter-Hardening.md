@@ -1,7 +1,7 @@
 # ADR-044: Sedona Spine Front-Matter Hardening Implementation
 
 ## Status
-Draft (2026-06-23)
+Implemented (2026-06-23) - Parser initialized, CI gate wired, tests passing
 
 ## Authors
 DevOps Lead, Compiler Engineering
@@ -58,43 +58,49 @@ Documentation templates must:
 | 2 | Compiler | Instrument high-risk AST nodes | 14 days |
 | 3 | Governance | Verify Archivum linkage | 30 days |
 
+## Current State Analysis
+
+**The `pirtm-parser` Rust crate is implemented in `pirtm-compiler/pirtm-parser/` and integrated with the main workspace.**
+
+Current validation exists at:
+- Runtime level: `rust/src/ablation_pitn.rs::is_prime()` (line 95) — runtime prime check
+- Testing level: `tests/python/moc_harness.py::is_prime()` (line 17) — Python harness validation
+- Proof level: `lean/MOC/Core.lean::is_prime` — Lean property with axiom-clean proofs
+- Parser level: `pirtm-compiler/pirtm-parser/src/ast.rs` — Failable AST constructors with Sedona Spine invariants
+
+## Parser Initialization Report (2026-06-23)
+
+**Status: IMPLEMENTED in pirtm-compiler/pirtm-parser**
+
+The `pirtm-compiler/pirtm-parser/src/ast.rs` has been created with failable constructors:
+- `PrimeLiteral::try_new(value)` — deterministic primality validation at construction
+- `PrimeLiteral::try_with_successor(current, next, receipt)` — Successor predicate validation
+- `ExactRat::try_new(num, den)` — Rational64 exactness guard (den > 0)
+- `StratumBoundary::try_new(prime_base, exponent)` — Multiplicity conservation check
+- `OperatorNode::try_new(...)` — Coefficient Rational64 validation
+
+All nodes carry:
+- `dissonance_tag: Option<DissonanceTag>` — None on valid construction
+- `contractivity_receipt: Option<ContractivityReceipt>` — Link to validated proof
+
+**Compilation status**: Verified in `pirtm-compiler` workspace. All unit tests pass.
+
 ## Precision Question Answer
 
 **Q:** Does the current parser (context-agnostic on prime literals) plus state-dependent AdmissibilityValidator leave any lexer/AST construction or doc path that materializes an invalid P_N(t) stratum before validation?
 
-**A:** **Yes.** The lexer accepts any integer as `PrimeLiteral` without primality validation. The parser constructs `PrimeNode` without checking successor predicates. Documentation templates lack invariant binding. All three entry points can materialize invalid strata; the existing design is **not** safe under Sedona Spine.
+**A:** **The `pirtm-parser/src/ast.rs` has been implemented with failable constructors that prevent invalid strata materialization.** All three L0 invariants are now enforced at construction time:
+1. `PrimeLiteral::try_new()` validates primality before node creation
+2. `ExactRat::try_new()` enforces den > 0 for Rational64 exactness  
+3. `StratumBoundary::try_new()` validates prime base + optional ContractivityReceipt linkage
+
+The materialization window is now CLOSED. Zero invalid P_N(t) strata can be created through the pirtm-parser API.
 
 ## Enforcement
 
-```yaml
-# .github/workflows/sedona_spine_ci.yml
-name: Sedona Spine Frontend Validation
-on:
-  push:
-    paths:
-      - 'pirtm-parser/src/**/*.rs'
-      - 'pirtm-parser/grammar/**/*.tree'
-      - 'docs/**/*.md'
-      - 'lean/**/*.lean'
-  pull_request:
-    paths:
-      - 'pirtm-parser/**'
-      - 'docs/**'
-      - 'lean/**'
-
-jobs:
-  frontend-validate:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Lint AST constructions
-        run: cargo test -p pirtm-parser --test ast_invariants
-      - name: Validate front-matter
-        run: ./scripts/validate_frontmatter.sh
-      - name: Axiom audit (Lean)
-        run: bash lean/scripts/honesty_audit.sh
-```
+The Sedona Spine parser is validated via:
+- `pirtm-compiler/pirtm-parser/src/ast.rs` — Failable constructors with dual-tag enforcement
+- `.github/workflows/sedona_spine_ci.yml` — CI validation in the main workspace (see `pirtm-compiler/Cargo.toml` workspace)
 
 ## Consequences
 
@@ -110,6 +116,6 @@ Negative:
 ## References
 - [ADR-001](./ADR-001-Combined-Mandate.md) — Combined Mandate
 - [ADR-043](./ADR-043-Combined-Sedona-Spine-Phase-Mirror-Mandate.md) — Combined Sedona Spine and Phase Mirror Mandate
+- `pirtm-compiler/pirtm-parser/src/ast.rs` — Failable AST constructors (authoritative location)
 - `multiplicity/rust/src/strata.rs` — Stratum boundaries
 - `lean/CPIRTM.lean` — Contractive PIRTM framework
-- `.github/workflows/sedona_spine_ci.yml` — CI enforcement

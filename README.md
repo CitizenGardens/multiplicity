@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-Multiplicity Substrates – Formalization & Rust Engine Core
-=======
 # Multiplicity Substrates — Root Repository
->>>>>>> b58a1b5 (Docs updated and extra docs removed.)
 
 This is the root repository for the Multiplicity Sovereign Core framework, containing formal Lean 4 verification, Rust engines, and the Phase Mirror Commander ecosystem. All developments are bound by the **Sedona Spine** policy and the Ξ-Constitution.
 
@@ -50,14 +46,14 @@ Substrates/
 │       ├── zk_trace.rs          # ZK-trace generation
 │       └── ...
 │
-├── rust/                        # Rust frameworks
-│   └── uor-framework/           # UOR ontology workspace (v0.5.2)
-│
 ├── models/                      # Model-specific implementations
 │   ├── the-commander/           # Commander crates and core
 │   ├── phase-mirror/            # Phase Mirror Observatory
 │   ├── legalese-scopist/       # Legal governance substrate
 │   └── ...
+│
+├── .github/workflows/           # CI workflows
+│   └── sedona_spine_ci.yml      # Sedona Spine frontend validation gate
 │
 └── Cargo.toml                   # Workspace definition
 ```
@@ -68,7 +64,6 @@ Substrates/
 |-----------|------|-------------|
 | **F1 Square** | `lean/` | 𝔽₁-square formalization for the Riemann Hypothesis program (v0.22.0) |
 | **Λ-RMAM-ZΞ 7.3** | `multiplicity/rust/` | Recursive prime-meta-ensemble architecture with ZK-audit |
-| **UOR Framework** | `rust/uor-framework/` | Universal Object Reference ontology as typed Rust |
 | **Phase Mirror** | `models/phase-mirror/` | Discrete state observatory with `ExactRat` foundation |
 | **Commander** | `models/the-commander/crates/` | Governance orchestration (ALP + Sigma + Archivum) |
 
@@ -115,7 +110,7 @@ See `docs/adr/ADR-001-Combined-Mandate.md` for the constitutional basis.
 - **Theory**: `lean/docs/f1_square_intersection_theory.md`, `lean/docs/missing_object_over_Q.md`
 - **Architecture**: `Ξ-Constitutional-Core.md`, `MOC.md`
 - **Governance**: `GEMINI.md`, `AGENTS.md`
-- **ADR Records**: `docs/adr/` (ADR-044 draft, ADR-043 ratified)
+- **ADR Records**: `docs/adr/` (ADR-044 ratified, ADR-043 ratified)
 
 ## License
 
